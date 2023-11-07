@@ -18,11 +18,11 @@ using System.Linq;
 
 namespace Smartwyre.DeveloperTest.Tests;
 
-public class PaymentServiceTests : IClassFixture<TestDataHelper>
+public class PaymentServiceTests : IClassFixture<MockData>
 {
-    TestDataHelper _fixture = new TestDataHelper();
+    MockData _fixture = new MockData();
 
-    public PaymentServiceTests(TestDataHelper fixture)
+    public PaymentServiceTests(MockData fixture)
     {
         _fixture = fixture;
     }

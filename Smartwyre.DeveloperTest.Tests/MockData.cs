@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Smartwyre.DeveloperTest.Tests
 {
-    public class TestDataHelper
+    public class MockData
     {
 
         public dbContext dbMock;
 
-        public TestDataHelper()
+        public MockData()
         {
             var options = new DbContextOptionsBuilder<dbContext>()
             .UseInMemoryDatabase("InMemoryDbTest")

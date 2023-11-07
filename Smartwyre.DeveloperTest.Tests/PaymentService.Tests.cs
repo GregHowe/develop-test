@@ -13,6 +13,8 @@ using Moq.EntityFrameworkCore;
 using Smartwyre.DeveloperTest.Types;
 using System.Collections.Generic;
 using Smartwyre.DeveloperTest.Interfaces;
+using System.Xml;
+using System.Linq;
 
 namespace Smartwyre.DeveloperTest.Tests;
 
@@ -28,30 +30,6 @@ public class PaymentServiceTests : IClassFixture<TestDataHelper>
     [Fact]
     public   void Test_identifyProduct_Successfully()
     {
-
-        //var testContext = new TestContext();
-        //testContext.GetMockProducts();
-
-        //var _contextMock = new Mock<dbContext>();
-        //_contextMock.Setup<DbSet<Product>>(x => x.Products)
-        //.ReturnsDbSet(TestDataHelper.GetFakeProductList());
-
-        //_contextMock.Setup<DbSet<Product>>(x => x.Products).ReturnsDbSet(TestDataHelper.GetFakeProductList());
-        //.ReturnsDbSet(TestDataHelper.GetFakeEmployeeList());
-
-        //var _product = new Product
-        //{
-        //    Id = 1,
-        //    Identifier = "P1",
-        //    Price = 1,
-        //    Uom = "Feet",
-        //    SupportedIncentives = SupportedIncentiveType.FixedCashAmount
-        //};
-        //Mock<IProduct> mockIProduct = new Mock<IProduct>();
-        //mockIProduct.Setup(p => p.GetProduct(It.IsAny<string>())).Returns(_product);
-
-        //-------------------------------------------------------------------------------
-
         var productIdentifier = "P1";
 
         var productDataStore = new ProductDataStore(_fixture.dbMock);

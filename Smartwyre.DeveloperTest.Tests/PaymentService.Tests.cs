@@ -27,11 +27,13 @@ public class PaymentServiceTests : IClassFixture<MockData>
         _fixture = fixture;
     }
 
-    [Fact]
-    public   void Test_identifyProduct_Successfully()
-    {
-        var productIdentifier = "P1";
 
+    [Theory]
+    [InlineData("P3")]
+    [InlineData("P2")]
+    [InlineData("P1")]
+    public   void Test_identifyProduct_Successfully(string productIdentifier)
+    {
         var productDataStore = new ProductDataStore(_fixture.dbMock);
         Product product = productDataStore.GetProduct(productIdentifier);
 
@@ -39,17 +41,19 @@ public class PaymentServiceTests : IClassFixture<MockData>
     }
 
 
-    [Fact]
-    public void Test_identify_Rebase_Successfully()
+    [Theory]
+    [InlineData("R1")]
+    [InlineData("R2")]
+    [InlineData("R3")]
+    public void Test_identify_Rebase_Successfully(string rebateIdentifier)
     {
-        var rebateIdentifier = "R1";
-
         var rebateDataStore = new RebateDataStore(_fixture.dbMock);
         Rebate rebate = rebateDataStore.GetRebate(rebateIdentifier);
 
         Assert.NotNull(rebate);
 
     }
+
 
     [Fact]
     public void TestValidate_Dont_Let_IncorrectType_Case_FixedCashAmount()

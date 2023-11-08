@@ -42,8 +42,8 @@ public class RebateService : IRebateService
         var result = new CalculateRebateResult();
         var validNull = validationNull(product, rebate);
         if (!validNull)
-            return result;
-        
+            throw new DontFindElementException();
+          
         var rebateAmount = 0m;
 
         result.Success = iRebateBase.validate(product, rebate, request);

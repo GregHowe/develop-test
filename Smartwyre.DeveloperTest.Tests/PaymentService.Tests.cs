@@ -32,11 +32,15 @@ public class PaymentServiceTests : IClassFixture<MockData>
     [InlineData("P3")]
     [InlineData("P2")]
     [InlineData("P1")]
-    public   void Test_identifyProduct_Successfully(string productIdentifier)
+    public   void When_Find_Product_Success(string productIdentifier)
     {
+        //Arrange
         var productDataStore = new ProductDataStore(_fixture.dbMock);
+        
+        //Act
         Product product = productDataStore.GetProduct(productIdentifier);
 
+        //Assert
         Assert.NotNull(product);
     }
 
@@ -45,20 +49,42 @@ public class PaymentServiceTests : IClassFixture<MockData>
     [InlineData("R1")]
     [InlineData("R2")]
     [InlineData("R3")]
-    public void Test_identify_Rebase_Successfully(string rebateIdentifier)
+    public void When_Find_Rebate_Success(string rebateIdentifier)
     {
+        //Arrange
         var rebateDataStore = new RebateDataStore(_fixture.dbMock);
+
+        //Act
         Rebate rebate = rebateDataStore.GetRebate(rebateIdentifier);
 
+        //Assert
         Assert.NotNull(rebate);
+
+    }
+
+    [Theory]
+    [InlineData("P22", "R22", 900)]
+    public void When_Calculation_Failed_because_Product_Doesnt_Exist_ERROR(string productIdentifier, string rebateIdentifier, decimal volume)
+    {
+        //Arrange
+        var service = new RebateService(new ProductDataStore(_fixture.dbMock), new RebateDataStore(_fixture.dbMock), new CalculationDataStore(_fixture.dbMock), new FixedCashAmount());
+
+        var input = new CalculateRebateRequest();
+        input.ProductIdentifier = productIdentifier;
+        input.RebateIdentifier = rebateIdentifier;
+        input.Volume = volume;
+
+        //Act && Assert
+        Assert.Throws<DontFindElementException>(() => service.Calculate(input));
 
     }
 
 
     [Theory]
     [InlineData("P2", "R2", 1500)]
-    public void TestValidate_Dont_Let_IncorrectType_Case_FixedCashAmount( string productIdentifier,string rebateIdentifier, decimal volume)
+    public void When_Calculation_Result_Is_False_Because_Product_Is_Not_Case_FixedCashAmount( string productIdentifier,string rebateIdentifier, decimal volume)
     {
+        //Arrange
         var service = new RebateService(new ProductDataStore(_fixture.dbMock), new RebateDataStore(_fixture.dbMock), new CalculationDataStore(_fixture.dbMock), new FixedCashAmount());
 
         var input = new CalculateRebateRequest();
@@ -66,15 +92,18 @@ public class PaymentServiceTests : IClassFixture<MockData>
         input.RebateIdentifier = rebateIdentifier;
         input.Volume = volume;
 
+        //Act
         var result = service.Calculate(input);
 
+        //Assert
         Assert.False(result.Success);
     }
 
     [Theory]
     [InlineData("P1", "R3", 700)]
-    public void TestValidate_Dont_Let_IncorrectType_CaseFixedRateRebate(string productIdentifier, string rebateIdentifier, decimal volume)
+    public void When_Calculation_Result_Is_False_Because_Product_Is_Not_Case_FixedRateRebate(string productIdentifier, string rebateIdentifier, decimal volume)
     {
+        //Arrange
         var service = new RebateService(new ProductDataStore(_fixture.dbMock), new RebateDataStore(_fixture.dbMock), new CalculationDataStore(_fixture.dbMock), new FixedRateRebate());
 
         var input = new CalculateRebateRequest();
@@ -82,15 +111,18 @@ public class PaymentServiceTests : IClassFixture<MockData>
         input.RebateIdentifier = rebateIdentifier;
         input.Volume = volume;
 
+        //Act
         var result = service.Calculate(input);
 
+        //Assert
         Assert.False(result.Success);
     }
 
     [Theory]
     [InlineData("P3", "R2", 800)]
-    public void TestValidate_Dont_Let_IncorrectType_CaseAmountPerUom(string productIdentifier, string rebateIdentifier, decimal volume)
+    public void When_Calculation_Result_Is_False_Because_Product_Is_Not_Case_CaseAmountPerUom(string productIdentifier, string rebateIdentifier, decimal volume)
     {
+        //Arrange
         var service = new RebateService(new ProductDataStore(_fixture.dbMock), new RebateDataStore(_fixture.dbMock), new CalculationDataStore(_fixture.dbMock), new AmountPerUom());
 
         var input = new CalculateRebateRequest();
@@ -98,16 +130,19 @@ public class PaymentServiceTests : IClassFixture<MockData>
         input.RebateIdentifier = rebateIdentifier;
         input.Volume = volume;
 
+        //Act
         var result = service.Calculate(input);
 
+        //Assert
         Assert.False(result.Success);
     }
 
 
     [Theory]
     [InlineData("P1", "R2", 5000)]
-    public void TestProcess_Success_FixedCashAmount(string productIdentifier, string rebateIdentifier, decimal volume)
+    public void When_Calculation_Result_Is_Sucess_Case_FixedCashAmount(string productIdentifier, string rebateIdentifier, decimal volume)
     {
+        //Arrange
         var service = new RebateService(new ProductDataStore(_fixture.dbMock), new RebateDataStore(_fixture.dbMock), new CalculationDataStore(_fixture.dbMock), new FixedCashAmount());
 
         var input = new CalculateRebateRequest();
@@ -115,15 +150,18 @@ public class PaymentServiceTests : IClassFixture<MockData>
         input.RebateIdentifier = rebateIdentifier;
         input.Volume = volume;
 
+        //Act
         var result = service.Calculate(input);
 
+        //Assert
         Assert.True(result.Success);
     }
 
     [Theory]
     [InlineData("P3", "R2", 1000)]
-    public void TestProcess_Success_FixedRateRebate(string productIdentifier, string rebateIdentifier, decimal volume)
+    public void When_Calculation_Result_Is_Sucess_Case_FixedRateRebate(string productIdentifier, string rebateIdentifier, decimal volume)
     {
+        //Arrange
         var service = new RebateService(new ProductDataStore(_fixture.dbMock), new RebateDataStore(_fixture.dbMock), new CalculationDataStore(_fixture.dbMock), new FixedRateRebate());
 
         var input = new CalculateRebateRequest();
@@ -131,16 +169,19 @@ public class PaymentServiceTests : IClassFixture<MockData>
         input.RebateIdentifier = rebateIdentifier;
         input.Volume = volume;
 
+        //Act
         var result = service.Calculate(input);
 
+        //Assert
         Assert.True(result.Success);
     }
 
 
     [Theory]
     [InlineData("P2", "R2", 1000)]
-    public void TestProcess_Success_AmountPerUom(string productIdentifier, string rebateIdentifier, decimal volume)
+    public void When_Calculation_Result_Is_Sucess_Case_AmountPerUom(string productIdentifier, string rebateIdentifier, decimal volume)
     {
+        //Arrange
         var service = new RebateService(new ProductDataStore(_fixture.dbMock), new RebateDataStore(_fixture.dbMock), new CalculationDataStore(_fixture.dbMock), new AmountPerUom());
 
         var input = new CalculateRebateRequest();
@@ -148,9 +189,10 @@ public class PaymentServiceTests : IClassFixture<MockData>
         input.RebateIdentifier = rebateIdentifier;
         input.Volume = volume;
 
-
+        //Act
         var result = service.Calculate(input);
 
+        //Assert
         Assert.True(result.Success);
     }
 

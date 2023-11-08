@@ -47,9 +47,6 @@ namespace Smartwyre.DeveloperTest.dboContext
 
         }
 
-        //public dbContext(DbContextOptions<dbContext> options) : base(options)
-        //{
-        //}
 
     }
 }
